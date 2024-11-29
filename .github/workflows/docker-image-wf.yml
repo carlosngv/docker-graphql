@@ -34,11 +34,15 @@ jobs:
         echo "New version: $NEW_VERSION ---" 
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     
-    # - name: Build Docker image
-    #   run: |
-    #     docker build -t carlosngv/docker-graphql:0.0.4 .
-    #     docker build -t carlosngv/docker-graphql:latest .
-    # - name: Push Docker image
-    #   run: |
-    #     docker push carlosngv/docker-graphql:0.0.4
-    #     docker push carlosngv/docker-graphql:latest
+    - name: Build Docker image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker build -t carlosngv/docker-graphql:$NEW_VERSION .
+        docker build -t carlosngv/docker-graphql:latest .
+    - name: Push Docker image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker push carlosngv/docker-graphql:$NEW_VERSION
+        docker push carlosngv/docker-graphql:latest
